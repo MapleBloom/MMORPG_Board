@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -140,16 +140,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_UNIQUE_EMAIL = True
-# ACCOUNT_USERNAME_REQUIRED = True
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
-# ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True   ##
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'   # 'mandatory', 'optional', 'none'
-# LOGIN_REDIRECT_URL = '/'
-# ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True   #
-# ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}   #
-# SOCIALACCOUNT_ADAPTER = "accounts.forms.CustomSocialAccountAdapter"   #
+LOGIN_REDIRECT_URL = 'pass'
+LOGOUT_REDIRECT_URL = "login"
 
 SITE_URL = 'http://127.0.0.1:8000'
 
@@ -162,3 +154,16 @@ EMAIL_HOST_EMAIL = os.getenv('EMAIL_HOST_EMAIL')
 DEFAULT_FROM_EMAIL = f'MMORPG Board <{EMAIL_HOST_EMAIL}>'
 SERVER_EMAIL = f'MMORPG Board <{EMAIL_HOST_EMAIL}>'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+        'TIMEOUT': 300,
+        'OPTIONS': {
+            'MAX_ENTRIES': 10,
+            'CULL_FREQUENCY': 2,
+        }
+
+    }
+}

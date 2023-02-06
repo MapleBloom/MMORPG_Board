@@ -1,0 +1,25 @@
+{% extends "default.html" %}
+
+{% block title %}
+Sign up
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>&nbsp;</p>
+        <h4>{{ user.username }}, вы уже авторизованы!</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'profile_user' pk=user.id %}">Ваш профиль</a>
+    {% else %}
+        <p>&nbsp;</p>
+        <h4>Регистрация</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="mt-3 btn-primary" value="Зарегистрироваться">
+        </form>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "default.html" %}
+
+{% block title %}
+Sign up email sent
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>&nbsp;</p>
+        <h4>{{ user.username }}, вы уже авторизованы!</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'profile_user' pk=user.id %}">Ваш профиль</a>
+    {% else %}
+        <p>&nbsp;</p>
+        <h4>На вашу почту отправлено письмо с кодом для подтверждения email.</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'login' %}">Перейти на страницу входа после подтверждения email</a>
+    {% endif %}
+{% endblock content %}

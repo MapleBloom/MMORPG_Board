@@ -1,0 +1,25 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Log in
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>&nbsp;</p>
+        <h4>{{ user.username }}, вы уже авторизованы!</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'profile_user' pk=user.id %}">Ваш профиль</a>
+    {% else %}
+        <p>&nbsp;</p>
+        <h2>Вход</h2>
+        <hr>
+        <p>&nbsp;</p>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="mt-3 btn-primary" value="Войти">
+        </form>
+    {% endif %}
+{% endblock content %}

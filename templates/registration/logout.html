@@ -1,0 +1,21 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Log out
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>&nbsp;</p>
+        <h4>{{ user.username }}, вы уверены, что хотите выйти?</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'login' %}">Выйти</a>
+    {% else %}
+        <p>&nbsp;</p>
+        <h4>Вы не авторизованы</h4>
+        <hr>
+        <p>&nbsp;</p>
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+{% endblock content %}

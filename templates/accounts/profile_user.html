@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+
+{% block title %}
+{{ user }} profile
+{% endblock title %}
+ 
+{% block content %}
+    <p>&nbsp;</p>
+    <h4>{{ user }} профиль</h4>
+    <hr>
+    <p>&nbsp;</p>
+    <h6>Username: {{ user.username }}</h6>
+    <h6>Email: {{ user.email }}</h6>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>_____</p>
+{% endblock content %}
