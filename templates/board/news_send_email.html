@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send news {{ news_list }}</title>
+</head>
+<body>
+    {% for new in news %}
+        <h4>Новость {{ new.pk }}</h4>
+        <p>***</p>
+        <h3>{{ new }}</h3>
+        <h5>{{ new.time_in|date:'d M Y l' }}</h5>
+        <br>
+        <p><em>{{ new.text }}</em></p>
+        <h5><em><a href="{{ link }}{{ new.pk }}/">Для просмотра полной новости пройдите по ссылке</a></em></h5>
+        <p>***</p>
+        <hr><br>
+    {% endfor %}
+</body>
+</html>

@@ -1,5 +1,7 @@
 from django.urls import path
+
 from .views import ProfileUser, SignUp, signup_mail_sent_view, ConfirmationSignUp
+
 
 urlpatterns = [
     path('<int:pk>/profile/', ProfileUser.as_view(), name='profile_user'),

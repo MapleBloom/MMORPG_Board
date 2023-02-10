@@ -1,0 +1,16 @@
+{% extends 'default.html' %}
+
+{% block title %}
+News {{ new.pk }}
+{% endblock title %}
+ 
+{% block content %}
+    <h4>Новость {{ new.pk }}</h4>
+    <hr>
+    <p>&nbsp;</p>
+    <h3>{{ new }}</h3>
+    <h6>{{ new.time_in|date:'d M Y l' }}</h6>
+    <p>&nbsp;</p>
+    <p><em>{{ new.text }}</em></p>
+    <p>{{ new.content|safe }}</p>
+{% endblock content %}
