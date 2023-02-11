@@ -1,0 +1,9 @@
+   {% extends 'admin/base.html' %}
+    {% load static %}
+
+    {% block extrahead %}
+        <link rel="shortcut icon" href="{% static 'favicon/favicon.ico'  %}" />
+    {% endblock %}
+    {% block stylesheets %}
+        {{ block.super }}
+    {% endblock %}

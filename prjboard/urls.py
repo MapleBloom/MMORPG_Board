@@ -24,8 +24,8 @@ from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
-    path('favicon/favicon.ico', RedirectView.as_view()),
     path('admin/', admin.site.urls),
+    path('favicon/favicon.ico', RedirectView.as_view()),
     path('board/', include('appboard.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
