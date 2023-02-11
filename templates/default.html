@@ -15,6 +15,7 @@
         </title>
 
         <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="shortcut icon" href="{%  static 'favicon/favicon.ico' %}"/>
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
@@ -36,11 +37,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/board/news/">Новости</a>
                         </li>
-<!--                        {% if perms.news.add_post and in_limit != 0 %}-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="/posts/create">Create post</a>-->
-<!--                        </li>-->
-<!--                        {% endif %}-->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/board/posts/">Объявления</a>
+                        </li>
+                        {% if perms.appboard.add_post %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/board/post_create">Новое объявление</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="nav-right">

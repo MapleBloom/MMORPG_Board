@@ -1,11 +1,17 @@
 from django.conf import settings
 from django.contrib import admin
-# from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 
-from .models import News
+from .models import Post, News
+
+
+class PostAdmin(admin.ModelAdmin):
+    model = Post
+    list_display = ('get_title', 'category', 'preview', 'author', 'date_in')
+    list_filter = ('author', 'category')
+    search_fields = ('title', 'preview')
 
 
 def send_news_email(modeladmin, request, queryset): # request — инфо о запросе; queryset — объекты, выделенные галочками
@@ -38,7 +44,9 @@ send_news_email.short_description = 'Рассылка новостей'
 
 
 class NewsAdmin(admin.ModelAdmin):
+    list_display = ('get_title', 'preview', 'author', 'date_in')
     actions = [send_news_email]
 
 
+admin.site.register(Post, PostAdmin)
 admin.site.register(News, NewsAdmin)

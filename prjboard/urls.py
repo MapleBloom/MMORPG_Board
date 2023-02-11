@@ -13,18 +13,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from ckeditor_uploader.views import upload, browse
+from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
+    path('favicon/favicon.ico', RedirectView.as_view()),
     path('admin/', admin.site.urls),
     path('board/', include('appboard.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
     path('silk/', include('silk.urls', namespace='silk')),
+    path('ckeditor/upload/', login_required(upload), name='ckeditor_upload'),
+    path('ckeditor/browse/', login_required(browse), name='ckeditor_browse'),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

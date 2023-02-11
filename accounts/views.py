@@ -5,9 +5,10 @@ from django.contrib.auth import logout
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from .forms import SignUpForm, ConfirmationSignUpForm
+from .permissions import ProfileUserPermissionRequiredMixin
 
 
 class SignUp(CreateView):
@@ -34,12 +35,14 @@ class ConfirmationSignUp(UpdateView):
         response = super().form_valid(form)
         user = form.cleaned_data.get('user')
         user.is_active = True
+        user_auth = Group.objects.get(name="user_auth")
+        user.groups.add(user_auth)
         user.save()
         return response
 
 
-class ProfileUser(LoginRequiredMixin, DetailView):
-    raise_exception = True
+class ProfileUser(LoginRequiredMixin, ProfileUserPermissionRequiredMixin, DetailView):
+    raise_exception = False
     permission_required = ('auth.view_user',)
     model = User
     template_name = 'accounts/profile_user.html'

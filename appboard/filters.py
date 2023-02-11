@@ -1,7 +1,42 @@
-from django_filters import FilterSet, ModelChoiceFilter, ModelMultipleChoiceFilter, DateFilter, CharFilter
+from django_filters import FilterSet, ModelChoiceFilter, DateFilter, CharFilter
 from django.forms import DateInput, TextInput
+from django.contrib.auth.models import User
 
-from .models import News
+from .models import Post, News
+
+
+class PostFilter(FilterSet):
+    author = ModelChoiceFilter(
+        field_name='author',
+        queryset=User.objects.all(),
+        lookup_expr='exact',
+        label=('Автор'),
+        empty_label='all'
+    )
+
+    title = CharFilter(
+        lookup_expr='icontains',
+        label='Объявление содержит',
+    )
+
+    content = CharFilter(
+        lookup_expr='icontains',
+        label='В содержании объявления',
+        # widget=TextInput(attrs={'class': 'form-control'}),
+    )
+
+    time_in = DateFilter(
+        field_name='time_in',
+        lookup_expr='gt',
+        label='Опубликовано с',
+        widget=DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+    )
+
+    class Meta:
+        model = Post
+        fields = {
+            'category': ['exact'],
+        }
 
 
 class NewsFilter(FilterSet):
@@ -26,19 +61,3 @@ class NewsFilter(FilterSet):
     class Meta:
         model = News
         fields = ['title', 'text', 'time_in']
-
-
-# class CategoryFilter(FilterSet):
-#     category = ModelChoiceFilter(
-#         field_name='category',
-#         queryset=Category.objects.all(),
-#         label='',
-#     )
-#
-#     author = ModelChoiceFilter(
-#         field_name='author',
-#         queryset=Author.objects.all(),
-#         lookup_expr='exact',
-#         label=gettext_lazy('Author'),
-#         empty_label='all'
-#     )

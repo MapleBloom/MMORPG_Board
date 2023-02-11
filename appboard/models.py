@@ -4,46 +4,50 @@ from django.contrib.auth.models import User
 from crum import get_current_user
 from django.urls import reverse
 
+from .utils import get_text_from_html
 
-# class Post(models.Model):
-#     CATEGORIES = [
-#         ('TN', 'Танки'),
-#         ('HL', 'Хилы'),
-#         ('DD', 'ДД'),
-#         ('TR', 'Торговцы'),
-#         ('GM', 'Гилдмастеры'),
-#         ('QG', 'Квестгиверы'),
-#         ('SM', 'Кузнецы'),
-#         ('TN', 'Кожевники'),
-#         ('PT', 'Зельевары'),
-#         ('SP', 'Мастера заклинаний'),
-#     ]
-#
-#     title = models.CharField(max_length=128)
-#     text = models.TextField(default='In progress')
-#     time_in = models.DateTimeField(auto_now_add=True)
-#     category = models.CharField(max_length=2, choices=CATEGORIES, default='NW')
-#
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ad')
-#
-#     def get_title(self):
-#         return str(self.title).upper()
-#
-#     def __str__(self):
-#         return f'{self.get_title()}'
 
-    # def get_absolute_url(self):
-    #     return reverse('post_detail', args=[str(self.id)])
+class Post(models.Model):
+    CATEGORIES = [
+        ('TA', 'Танки'),
+        ('HL', 'Хилы'),
+        ('DD', 'ДД'),
+        ('TR', 'Торговцы'),
+        ('GM', 'Гилдмастеры'),
+        ('QG', 'Квестгиверы'),
+        ('SM', 'Кузнецы'),
+        ('TN', 'Кожевники'),
+        ('PT', 'Зельевары'),
+        ('SP', 'Мастера заклинаний'),
+    ]
 
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     cache.delete(f'post-{self.pk}')
+    title = models.CharField('Объявление', max_length=64)
+    content = RichTextUploadingField('Содержание')
+    category = models.CharField('Категория', max_length=2, choices=CATEGORIES, default='TA')
+    time_in = models.DateTimeField(auto_now_add=True)
+    preview = models.CharField(max_length=64, blank=True, null=True, default=None)
 
-    # def preview(self):
-    #     return f'{self.text[:50]}...'
-    #
-    # def date_in(self):
-    #     return self.time_in.date()
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post', editable=False,
+                               blank=True, null=True, default=None)
+
+    def save(self, *args, **kwargs):
+        user = get_current_user()
+        if not self.pk:
+            self.author = user
+        self.preview = get_text_from_html(self.content)
+        super().save(*args, **kwargs)
+
+    def get_title(self):
+        return str(self.title).upper()
+
+    def __str__(self):
+        return f'{self.get_title()}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.pk)])
+
+    def date_in(self):
+        return self.time_in.date()
 
 
 class News(models.Model):
@@ -55,18 +59,23 @@ class News(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='news', editable=False,
                                blank=True, null=True, default=None)
 
-
     def save(self, *args, **kwargs):
         user = get_current_user()
         if not self.pk:
             self.author = user
         super().save(*args, **kwargs)
 
+    def get_title(self):
+        return str(self.title).upper()
+
     def __str__(self):
-        return f'{str(self.title).upper()}'
+        return f'{self.get_title()}'
 
     def get_absolute_url(self):
         return reverse('news_detail', args=[str(self.pk)])
 
     def preview(self):
-        return f'{self.text[:128]}...'
+        return f'{self.text[:64]}...'
+
+    def date_in(self):
+        return self.time_in.date()
