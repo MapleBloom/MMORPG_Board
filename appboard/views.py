@@ -38,7 +38,7 @@ class PostDetail(DetailView):
         context = super().get_context_data(**kwargs)
         post = context['post']
         if self.request.user.is_authenticated:
-            replies = post.reply.all().filter(author=self.request.user)
+            replies = post.reply.all().filter(author=self.request.user).exclude(status='D')
             context['replies'] = replies
         return context
 
@@ -69,7 +69,7 @@ class ReplyList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(post__in=Post.objects.filter(author=self.request.user))
+        queryset = queryset.filter(post__in=Post.objects.filter(author=self.request.user)).exclude(status='D')
         self.filterset = ReplyFilter(self.request.GET, queryset)
         return self.filterset.qs
 
