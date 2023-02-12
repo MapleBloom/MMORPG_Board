@@ -34,13 +34,12 @@ class PostDetail(DetailView):
     template_name = 'board/post.html'
     context_object_name = 'post'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     post = context['post']
-    #     replies = post.reply   # .objects.filter(author=self.request.user)
-    #     context['replies'] = replies
-    #     print(context)
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = context['post']
+        replies = post.reply.all().filter(author=self.request.user)
+        context['replies'] = replies
+        return context
 
 
 def reply_create(request, pk):
@@ -53,9 +52,9 @@ def reply_create(request, pk):
     next = request.GET.get('next')
     send_mail(
         subject=f"Новый отклик на ваше объявление '{post}'",
-        message=f"Уважаемый, {user}!\n\n Вы получили новый отклик на ваше объявление '{post}'.\n Примите или отклоните его.",
+        message=f"Уважаемый, {post.author}!\n\n Вы получили новый отклик на ваше объявление '{post}'.\n Примите или отклоните его.",
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email]
+        recipient_list=[post.author.email]
     )
     return HttpResponseRedirect(next)
 

@@ -43,11 +43,11 @@ Post {{ post.pk }}
                 </tr>
                 {% for reply in replies %}
                 <tr>
-                    <td>{{ post.text }}</td>
+                    <td>{{ reply.text }}</td>
                     <td>&emsp;</td>
-                    <td>{{ post.status }}</a></td>
+                    <td>{{ reply.get_status_display }}</a></td>
                     <td>&emsp;</td>
-                    <td>{{ post.time_in|date:'M d Y' }}</td>
+                    <td>{{ reply.time_in|date:'M d Y' }}</td>
                 </tr>
                 {% endfor %}
             </table></center>
