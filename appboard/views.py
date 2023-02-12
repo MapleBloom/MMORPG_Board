@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, Reply, News
-from .filters import PostFilter, NewsFilter
+from .filters import PostFilter, ReplyFilter, NewsFilter
 from .forms import PostForm
 from .permissions import ChangePermissionRequiredMixin
 
@@ -37,8 +37,9 @@ class PostDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = context['post']
-        replies = post.reply.all().filter(author=self.request.user)
-        context['replies'] = replies
+        if self.request.user.is_authenticated:
+            replies = post.reply.all().filter(author=self.request.user)
+            context['replies'] = replies
         return context
 
 
@@ -52,12 +53,52 @@ def reply_create(request, pk):
     next = request.GET.get('next')
     send_mail(
         subject=f"Новый отклик на ваше объявление '{post}'",
-        message=f"Уважаемый, {post.author}!\n\n Вы получили новый отклик на ваше объявление '{post}'.\n Примите или отклоните его.",
+        message=f"Уважаемый, {post.author}!\n\nВы получили новый отклик на ваше объявление '{post}'.\nПримите или отклоните его.",
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[post.author.email]
     )
     return HttpResponseRedirect(next)
 
+
+class ReplyList(LoginRequiredMixin, ListView):
+    model = Reply
+    ordering = '-time_in'
+    template_name = 'board/replies_list.html'
+    context_object_name = 'replies'
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(post__in=Post.objects.filter(author=self.request.user))
+        self.filterset = ReplyFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
+def reply_set_status(request):
+    pk = request.POST.get('pk')
+    reply = Reply.objects.get(pk=pk)
+    print(request.GET)
+    print(request.POST)
+    if request.POST.get('accept'):
+        reply.status = 'A'
+    elif request.POST.get('reject'):
+        reply.status = 'D'
+    reply.save()
+    status = reply.get_status_display()
+    print(status)
+    next = request.GET.get('next')
+    send_mail(
+        subject=f"Реакция на отклик по объявлению '{reply.post}'",
+        message=f"Уважаемый, {reply.author}!\n\nВаш отклик '{reply}' на объявление '{reply.post}' {status}.",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[reply.author.email]
+    )
+    return HttpResponseRedirect(next)
 
 class PostCreate(LoginRequiredMixin, CreateView):
     raise_exception = False

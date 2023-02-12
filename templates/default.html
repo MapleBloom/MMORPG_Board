@@ -51,6 +51,9 @@
                     <ul class="navbar-nav ml-auto">
                         {% if user.is_active and user.is_authenticated %}
                             <li class="nav-item">
+                                <a class="nav-link" href="{% url 'replies_to_author' %}">Отклики</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{% url 'profile_user' pk=user.id %}">
                                     Профиль {{ user.username }}</a>
                             </li>

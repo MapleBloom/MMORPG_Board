@@ -2,7 +2,7 @@ from django_filters import FilterSet, ModelChoiceFilter, DateFilter, CharFilter
 from django.forms import DateInput, TextInput
 from django.contrib.auth.models import User
 
-from .models import Post, News
+from .models import Post, Reply, News
 
 
 class PostFilter(FilterSet):
@@ -36,6 +36,30 @@ class PostFilter(FilterSet):
         model = Post
         fields = {
             'category': ['exact'],
+        }
+
+
+class ReplyFilter(FilterSet):
+    author = ModelChoiceFilter(
+        field_name='author',
+        queryset=User.objects.all(),
+        lookup_expr='exact',
+        label=('Автор'),
+        empty_label='all'
+    )
+
+    time_in = DateFilter(
+        field_name='time_in',
+        lookup_expr='gt',
+        label='Получен с',
+        widget=DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
+    )
+
+    class Meta:
+        model = Reply
+        fields = {
+            'post': ['exact'],
+            'status': ['exact'],
         }
 
 

@@ -52,9 +52,9 @@ class Post(models.Model):
 
 class Reply(models.Model):
     STATUSES = [
-        ('C', 'Создано'),
-        ('A', 'Принято'),
-        ('D', 'Отклонено'),
+        ('C', 'Создан'),
+        ('A', 'Принят'),
+        ('D', 'Отклонен'),
     ]
 
     text = models.CharField('Отклик', max_length=128)

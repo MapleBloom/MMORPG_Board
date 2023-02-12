@@ -15,6 +15,8 @@ Posts
             <tr>
                 <td>Объявление</td>
                 <td>&emsp;</td>
+                <td>Категория</td>
+                <td>&emsp;</td>
                 <td>Автор</td>
                 <td>&emsp;</td>
                 <td>Содержание</td>
@@ -23,11 +25,13 @@ Posts
             </tr>
             {% for post in posts %}
             <tr>
-                <td><a href="{{ post.id }}">{{ post.title|upper }}</a></td>
+                <td><a href="{{ post.pk }}">{{ post.title|upper }}</a></td>
                 <td>&emsp;</td>
-                <td><a href="{{ post.id }}">{{ post.author }}</a></td>
+                <td><a href="{{ post.pk }}">{{ post.get_category_display }}</a></td>
                 <td>&emsp;</td>
-                <td><a href="{{ post.id }}">{{ post.preview }}</a></td>
+                <td><a href="{{ post.pk }}">{{ post.author }}</a></td>
+                <td>&emsp;</td>
+                <td><a href="{{ post.pk }}">{{ post.preview }}</a></td>
                 <td>&emsp;</td>
                 <td>{{ post.time_in|date:'M d Y' }}</td>
             </tr>
