@@ -33,5 +33,4 @@ def get_text_from_html(html):
                 sub_text = []
     if sub_text and ('&' not in curr and ';' not in curr):
         text_list.append(sub_text)
-    print(text_list)
     return ''.join(text_list)

@@ -4,7 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 
-from .models import Post, News
+from .models import Post, Reply, News
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -12,6 +12,13 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('get_title', 'category', 'preview', 'author', 'date_in')
     list_filter = ('author', 'category')
     search_fields = ('title', 'preview')
+
+
+class ReplyAdmin(admin.ModelAdmin):
+    model = Reply
+    list_display = ('text', 'status', 'post', 'author', 'date_in')
+    list_filter = ('status', 'author')
+    search_fields = ('text', 'post')
 
 
 def send_news_email(modeladmin, request, queryset): # request — инфо о запросе; queryset — объекты, выделенные галочками
@@ -49,4 +56,5 @@ class NewsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Post, PostAdmin)
+admin.site.register(Reply, ReplyAdmin)
 admin.site.register(News, NewsAdmin)

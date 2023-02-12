@@ -232,7 +232,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_EMAIL = os.getenv('EMAIL_HOST_EMAIL')
 DEFAULT_FROM_EMAIL = f'MMORPG Board <{EMAIL_HOST_EMAIL}>'
 SERVER_EMAIL = f'Доска Объявлений MMORPG<{EMAIL_HOST_EMAIL}>'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CACHES = {
     'default': {
